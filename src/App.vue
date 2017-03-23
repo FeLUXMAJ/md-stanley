@@ -135,7 +135,7 @@ export default {
 }
 
 body, .cmtbottom{
-  background-color: #f1ebe3 !important;
+  background-color: #fff !important;
   color: #161823 !important;
 }
 
@@ -144,7 +144,7 @@ body, .cmtbottom{
 }
 
 .md-toolbar {
-  color: rgb(153,70,57) !important;
+  color: #fff !important;
 }
 
 .md-toolbar-post{

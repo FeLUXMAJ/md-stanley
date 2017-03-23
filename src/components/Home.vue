@@ -21,7 +21,10 @@
     </md-menu>
   </md-card-header>
 
-  <md-card-content v-html="item.excerpt.rendered"></md-card-content>
+  <md-card-content v-if="item.excerpt.protected">
+    This post is password protected
+  </md-card-content>
+  <md-card-content v-else v-html="item.excerpt.rendered"></md-card-content>
   </md-card>
   <infinite-loading :on-infinite="onInfinite" ref="infiniteLoading">
   <span slot="no-more">
@@ -48,7 +51,7 @@ export default {
   watch: {
     '$route': 'reload'
   },
-  created: function () {
+  activated: function () {
     this.$parent.title = this.$parent.siteName
   },
   methods: {
@@ -56,7 +59,7 @@ export default {
       if (this.$route.name == 'Home') {
         var cat = 'all'
         this.$parent.title = this.$parent.siteName
-      } else if (this.$route.name == 'Category') {
+      } else if (this.$route.name == 'Category') {  //code sucks, need to change
         var cat = this.$route.params.categoryId
         this.$parent.title = this.$route.params.categoryName
       }
@@ -72,7 +75,8 @@ export default {
       this.$http.get('posts', {
         params: {
           page: this.list.length / 10 + 1,
-          categories: this.$route.params.categoryId
+          categories: this.$route.params.categoryId,
+          fields: 'id,title,excerpt,modified_gmt'
         },
       }).then((posts) => {
         if (posts.data.length) {

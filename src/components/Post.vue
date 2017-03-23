@@ -2,34 +2,27 @@
   <div class="post">
     <md-progress md-indeterminate v-if="this.loading" class="md-warn"></md-progress>
     <div class="wrapper" v-else>
-      <div class="post-cover" v-once>
-      </div>
+      <div class="post-cover" v-once></div>
+
       <div class="container" id="post">
-        <div v-html="post.content.rendered"></div>
-        <md-speed-dial md-open="click" md-direction="top" class="md-fab-bottom-right" v-if="this.$children.isCmt == false">
-        <md-button class="md-fab" md-fab-trigger>
-          <md-icon md-icon-morph>close</md-icon>
-          <md-icon>add</md-icon>
-        </md-button>
+        <div v-if="post.content.rendered == ''">
+          <md-input-container md-has-password>
+            <md-icon>lock</md-icon>
+            <label>Password</label>
+            <md-input type="password" v-model="password"></md-input>
+          </md-input-container>
+          <md-button class="md-primary" v-on:click.native.once="reload">Confirm</md-button>
+        </div>
 
-        <md-button class="md-fab md-primary md-mini md-clean">
-          <md-icon>share</md-icon>
-          <md-tooltip md-direction="left">Share this post</md-tooltip>
-        </md-button>
-
-        <md-button class="md-fab md-primary md-mini md-clean">
-          <md-icon>comment</md-icon>
-          <md-tooltip md-direction="left">Leave a reply</md-tooltip>
-        </md-button>
-
-        <md-button class="md-fab md-primary md-mini md-clean">
-          <md-icon>attach_money</md-icon>
-          <md-tooltip md-direction="left">Donate</md-tooltip>
-        </md-button>
-        </md-speed-dial>
+        <div v-else v-html="post.content.rendered"></div>
       </div>
+
     </div>
-    <comment v-bind:postId="post.id" v-if="loading == false"></comment>
+    <md-snackbar md-position="bottom center" ref="snackbar" md-duration="4000">
+      <span>Incorrect Password</span>
+      <md-button class="md-warn" @click.native="$refs.snackbar.close()">Dismiss</md-button>
+    </md-snackbar>
+    <comment v-bind:postId="post.id" v-if="loading == false && post.content.protected == false"></comment>
   </div>
 </template>
 
@@ -40,17 +33,15 @@ export default {
     return {
       post: [],
       tags: [],
+      password: '',
       loading: true,
       previousPost: '',
       scrolled: 0,
-      postmain: 0
+      postmain: 0,
     }
   },
   name: 'post',
   components: {Comment},
-  watch: {
-    '$route': 'reload'
-  },
   mounted () {
     this.reload()
   },
@@ -59,6 +50,10 @@ export default {
     window.addEventListener('scroll', this.handleScroll)
     this.scrolled = 0
     this.postmain = 0
+    if (typeof post !== 'undefined' && post !== this.previousPost) {
+      this.password = null
+      this.reload()
+    }
   },
   deactivated () {
     this.$parent.transparent = false
@@ -76,20 +71,20 @@ export default {
     reload () {
       this.loading = true
       var post = this.$route.params.postId
-      if (typeof post !== 'undefined' && post !== this.previousPost) {
-        this.$parent.title = 'Loading...'
-        this.$http.get('posts/' + this.$route.params.postId).then((res) => {
-          this.post = res.data
-          this.$parent.title = this.post.title.rendered
-          this.loading = false
-          this.previousPost = post
-        })
-      } else {
-        if (this.$route.name == 'Post') {
-          this.$parent.title = this.post.title.rendered
-          this.loading = false
+      this.$parent.title = 'Loading...'
+      this.$http.get('posts/' + this.$route.params.postId,{
+        params: {
+          password: this.password
         }
-      }
+      }).then((res) => {
+        this.post = res.data
+        this.$parent.title = this.post.title.rendered
+        this.loading = false
+        this.previousPost = post
+      }, (res) => {
+        this.loading = false
+        this.$refs.snackbar.open()
+      })
     }
   }
 }

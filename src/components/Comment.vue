@@ -9,7 +9,7 @@
       <md-input-container md-inline>
         <label>{{placeholder}}</label>
         <md-textarea v-model="comment"></md-textarea>
-        <md-icon v-on:click.native="submit">send</md-icon>
+        <md-icon v-on:click.native.once="submit">send</md-icon>
       </md-input-container>
     </div>
 

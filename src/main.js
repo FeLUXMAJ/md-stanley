@@ -16,7 +16,7 @@ stl:{50:"#e7dcce",100:"#b98477",200:"#cb4042",300:"#e7dcce",400:"#f1ebe3",500:"#
 Vue.material.registerTheme('default', {
   primary: {
     color: 'stl',
-    hue: 50
+    hue: 200
   },
   warn: {
     color: 'stl',
