@@ -45,38 +45,42 @@ export default {
   data () {
     return {
       list: [],
-      oldCategoryId : '',
+      categoryId: ''
+    }
+  },
+  mounted () {
+    this.categoryId = this.$route.params.categoryId
+  },
+  activated () {
+    this.$parent.title = this.$parent.siteName
+    if (this.categoryId) {
+      this.$parent.title = this.$route.params.categoryName
+    }
+    if (this.$route.params.categoryId != this.categoryId) {
+      this.reload()
     }
   },
   watch: {
-    '$route': 'reload'
-  },
-  activated: function () {
-    this.$parent.title = this.$parent.siteName
+    '$route.params.categoryId': 'reload'
   },
   methods: {
     reload () {
-      if (this.$route.name == 'Home') {
-        var cat = 'all'
-        this.$parent.title = this.$parent.siteName
-      } else if (this.$route.name == 'Category') {  //code sucks, need to change
-        var cat = this.$route.params.categoryId
-        this.$parent.title = this.$route.params.categoryName
-      }
-      if (typeof cat !== 'undefined' && cat !== this.oldCategoryId) {
-        this.list = []
-        this.$nextTick(() => {
-          this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
-        })
-        this.oldCategoryId = cat
+      this.$parent.title = this.$route.params.categoryName
+      if (this.$route.name == 'Home' || this.$route.params.categoryId != '') {
+        if (this.categoryId != this.$route.params.categoryId) {
+          this.list = []
+          this.$nextTick(() => {
+            this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
+          })
+        }
       }
     },
     onInfinite() {
       this.$http.get('posts', {
         params: {
           page: this.list.length / 10 + 1,
-          categories: this.$route.params.categoryId,
-          fields: 'id,title,excerpt,modified_gmt'
+          fields: 'id,title,excerpt,modified_gmt',
+          categories: this.$route.params.categoryId
         },
       }).then((posts) => {
         if (posts.data.length) {

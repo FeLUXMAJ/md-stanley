@@ -127,7 +127,8 @@ export default {
         params: {
           post: this.postId,
           parent: 0,
-          page: this.list.length / 10 + 1
+          page: this.list.length / 10 + 1,
+          password: this.$parent.password
         },
       }).then((comments) => {
         if (comments.data.length) {

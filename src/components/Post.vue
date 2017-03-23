@@ -11,7 +11,7 @@
             <label>Password</label>
             <md-input type="password" v-model="password"></md-input>
           </md-input-container>
-          <md-button class="md-primary" v-on:click.native.once="reload">Confirm</md-button>
+          <md-button class="md-primary" v-on:click.native.once="getPost">Confirm</md-button>
         </div>
 
         <div v-else v-html="post.content.rendered"></div>
@@ -22,7 +22,7 @@
       <span>Incorrect Password</span>
       <md-button class="md-warn" @click.native="$refs.snackbar.close()">Dismiss</md-button>
     </md-snackbar>
-    <comment v-bind:postId="post.id" v-if="loading == false && post.content.protected == false"></comment>
+    <comment v-bind:postId="post.id" v-if="loading == false && post.content.rendered != ''"></comment>
   </div>
 </template>
 
@@ -35,25 +35,21 @@ export default {
       tags: [],
       password: '',
       loading: true,
-      previousPost: '',
       scrolled: 0,
       postmain: 0,
     }
   },
   name: 'post',
   components: {Comment},
-  mounted () {
-    this.reload()
-  },
   activated () {
+    if (this.post.id != this.$route.params.postId) {
+      this.password = null
+      this.getPost()
+    }
     this.$parent.transparent = true
     window.addEventListener('scroll', this.handleScroll)
     this.scrolled = 0
     this.postmain = 0
-    if (typeof post !== 'undefined' && post !== this.previousPost) {
-      this.password = null
-      this.reload()
-    }
   },
   deactivated () {
     this.$parent.transparent = false
@@ -68,9 +64,8 @@ export default {
         this.$parent.transparent = false
       }
     },
-    reload () {
+    getPost () {
       this.loading = true
-      var post = this.$route.params.postId
       this.$parent.title = 'Loading...'
       this.$http.get('posts/' + this.$route.params.postId,{
         params: {
