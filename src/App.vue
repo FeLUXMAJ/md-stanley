@@ -181,11 +181,11 @@ body, .cmtbottom{
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 2 !important;
 }
 
 .md-sidenav .md-sidenav-content {
-  z-index: 300 !important;
+  z-index: 3 !important;
 }
 
 .container {
