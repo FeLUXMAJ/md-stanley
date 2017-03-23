@@ -26,7 +26,7 @@
             </md-avatar>
           </md-list-item>
 
-          <md-list-item>
+          <md-list-item class="md-avatar-list">
             <div class="md-list-text-container">
               <span>{{siteName}}</span>
               <span>{{siteDescription}}</span>
@@ -46,7 +46,10 @@
 
             <md-list-expand>
               <md-list>
-                <router-link :to="'/category/'+ category.name +'/id/'+ category.id " tag="li" v-for="category in categories">
+                <router-link
+                  :to="'/category/'+ category.name +'/id/'+ category.id "
+                  tag="li"
+                  v-for="category in categories">
                 <md-list-item class="md-inset">
                   {{category.name}}
                 </md-list-item>
@@ -170,7 +173,7 @@ body, .cmtbottom{
   flex: 1;
 }
 
-.md-avatar-list, .md-list-text-container:hover {
+.md-avatar-list .md-list-item-container:hover{
   background: none !important;
 }
 

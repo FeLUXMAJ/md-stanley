@@ -52,7 +52,8 @@
 export default {
   data () {
     return {
-      sublist: []
+      sublist: [],
+      loading: false
     }
   },
   filters: {
@@ -81,6 +82,8 @@ export default {
           this.sublist = []
           this.$parent.parent = 0
         }
+
+      return true
       }
   }
 }

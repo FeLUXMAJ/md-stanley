@@ -9,9 +9,14 @@
       <md-input-container md-inline>
         <label>{{placeholder}}</label>
         <md-textarea v-model="comment"></md-textarea>
-        <md-icon v-on:click.native.once="submit">send</md-icon>
+        <md-icon v-on:click.native.stop="submit">send</md-icon>
       </md-input-container>
     </div>
+
+    <md-snackbar md-position="bottom center" ref="snackbar" md-duration="4000">
+      <span>{{message}}</span>
+      <md-button class="md-warn" @click.native="$refs.snackbar.close()">Dismiss</md-button>
+    </md-snackbar>
 
     <div class="comments">
         <div class="custom-list md-triple-line"  v-for="item in list">
@@ -52,7 +57,7 @@ span {
   bottom: 0px;
   width: 100%;
   left: 0px;
-  z-index: 200;
+  z-index: 2;
   padding: 0 16px 0 16px;
   margin: -10px 0 -10px 0;
 }
@@ -68,11 +73,12 @@ import CommentList from '@/components/CommentList'
 export default {
   data () {
     return {
-      comment: '',
+      comment: '', //content of comment
       parent: 0,
       list: [],
       authorName: '',
-      authorEmail: ''
+      authorEmail: '',
+      message: ''
     }
   },
   name: 'Comment',
@@ -96,12 +102,10 @@ export default {
   components: {
     InfiniteLoading, CommentList
   },
-  created () {
-    this.authorName = localStorage.getItem('name')
-    this.authorEmail = localStorage.getItem('email')
-  },
   activated () {
     this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset')
+    this.authorName = localStorage.getItem('name')
+    this.authorEmail = localStorage.getItem('email')
   },
   deactivated () {
     this.list = []
@@ -109,17 +113,32 @@ export default {
   methods: {
     submit () {
       if (this.comment !== '') {
-        var body = new FormData()
-        body.append("author_name", this.authorName)
-        body.append("author_email", this.authorEmail)
-        body.append("post", this.postId)
-        body.append("content", this.comment)
-        body.append("parent", this.parent)
-        this.$parent.loading = true
-        this.$http.post('comments/', body).then((res) => {
-          console.log(res.data)
-          this.$parent.loading = false
-        })
+        if (this.authorName != null && this.authorEmail != null) {
+          var body = new FormData()
+          //append info
+          body.append("author_name", this.authorName)
+          body.append("author_email", this.authorEmail)
+          body.append("post", this.postId)
+          body.append("content", this.comment)
+          body.append("parent", this.parent)
+
+          this.$parent.loading = true
+
+          this.$http.post('comments/', body).then((res) => {
+            this.$parent.loading = false
+            this.message = 'Sent'
+          },
+          (res) => {
+            this.$parent.loading = false
+            this.message = res.data.message
+          })
+
+        }
+
+        else {
+          this.message = 'Name and email not set'
+        }
+        this.$refs.snackbar.open()
       }
     },
     onInfiniteComments () {

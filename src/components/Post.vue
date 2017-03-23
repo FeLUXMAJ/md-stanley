@@ -22,7 +22,7 @@
       <span>Incorrect Password</span>
       <md-button class="md-warn" @click.native="$refs.snackbar.close()">Dismiss</md-button>
     </md-snackbar>
-    <comment v-bind:postId="post.id" v-if="loading == false && post.content.rendered != ''"></comment>
+    <comment v-bind:postId="post.id" v-if="post.content.rendered != ''"></comment>
   </div>
 </template>
 
@@ -42,14 +42,17 @@ export default {
   name: 'post',
   components: {Comment},
   activated () {
+    window.addEventListener('scroll', this.handleScroll)
+    this.scrolled = 0
+    this.postmain = 0
     if (this.post.id != this.$route.params.postId) {
       this.password = null
       this.getPost()
     }
+    if (this.post) {
+      this.$parent.title = this.post.title.rendered
+    }
     this.$parent.transparent = true
-    window.addEventListener('scroll', this.handleScroll)
-    this.scrolled = 0
-    this.postmain = 0
   },
   deactivated () {
     this.$parent.transparent = false
