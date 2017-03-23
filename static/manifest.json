@@ -1,0 +1,20 @@
+{
+  "name": "Stanley's blog",
+  "short_name": "Stanley",
+  "icons": [
+    {
+      "src": "/static/drawable-xxhdpi/ic_launcher.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/drawable-xxxhdpi/ic_launcher.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f1ebe3",
+  "theme_color": "#e7dcce"
+}
