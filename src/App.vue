@@ -160,12 +160,13 @@ body, .cmtbottom{
   position: fixed;
   height: 100%;
   width: 100%;
-  z-index: 200;
+  z-index: 300;
 }
 
 .md-card {
   background-color: transparent !important;
   box-shadow: none;
+  z-index: 100;
 }
 
 .main {
@@ -181,11 +182,11 @@ body, .cmtbottom{
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 2 !important;
+  z-index: 200 !important;
 }
 
-.md-sidenav .md-sidenav-content {
-  z-index: 3 !important;
+.md-sidenav-content {
+  z-index: 400 !important;
 }
 
 .container {
