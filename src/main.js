@@ -15,12 +15,12 @@ stl:{50:"#e7dcce",100:"#b98477",200:"#cb4042",300:"#e7dcce",400:"#f1ebe3",500:"#
 */
 Vue.material.registerTheme('default', {
   primary: {
-    color: 'stl',
-    hue: 200
+    color: 'teal',
+    hue: 500
   },
   warn: {
-    color: 'stl',
-    hue: 500
+    color: 'teal',
+    hue: 400
   }
 })
 /* eslint-disable no-new */
