@@ -42,7 +42,6 @@ export default {
   name: 'post',
   components: {Comment},
   activated () {
-    this.$parent.transparent = true
     window.addEventListener('scroll', this.handleScroll)
     this.scrolled = 0
     this.postmain = 0
@@ -52,6 +51,7 @@ export default {
     }
     if (this.post) {
       this.$parent.title = this.post.title.rendered
+      this.$parent.transparent = true
     }
   },
   deactivated () {
@@ -78,7 +78,7 @@ export default {
         this.post = res.data
         this.$parent.title = this.post.title.rendered
         this.loading = false
-        this.previousPost = post
+        this.$parent.transparent = true
       }, (res) => {
         this.loading = false
         this.$refs.snackbar.open()

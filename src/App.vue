@@ -73,19 +73,12 @@
         </md-list>
     </md-sidenav>
 
-    <transition name="slide-fade">
-      <keep-alive>
-        <router-view class="main"></router-view>
-      </keep-alive>
-    </transition>
+      <transition name="slide-fade">
+        <keep-alive>
+          <router-view class="main"></router-view>
+        </keep-alive>
+      </transition>
 
-    <div class="footer">
-      <md-layout md-gutter class="container md-accent">
-        <md-layout md-flex-xsmall="100" md-flex-small="100" md-flex-medium="100">
-          ©2017 Stanley Cao
-        </md-layout>
-      </md-layout>
-    </div>
   </div>
 </template>
 

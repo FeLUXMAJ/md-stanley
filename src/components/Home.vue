@@ -1,30 +1,35 @@
 <template>
 <div class="home">
-  <md-card v-for="item in list">
-  <md-card-header>
-    <md-card-header-text>
-      <router-link :to="'/post/'+item.id" tag="div"><div class="md-title">{{item.title.rendered}}</div></router-link>
-      <div class="md-subhead">{{ item.modified_gmt | locale }}</div>
-    </md-card-header-text>
+  <md-card v-for="item in list" md-with-hover>
+    <md-card-media v-if="item._embedded['wp:featuredmedia']">
+        <img v-bind:src="item._embedded['wp:featuredmedia'][0].source_url">
+    </md-card-media>
+    
+    <md-card-header>
+      <md-card-header-text>
+        <router-link :to="'/post/'+item.id" tag="div"><div class="md-title">{{item.title.rendered}}</div></router-link>
+        <div class="md-subhead">{{ item.modified_gmt | locale }}</div>
+      </md-card-header-text>
+    </md-card-header>
 
-    <md-menu md-size="4" md-direction="bottom left">
-      <md-button class="md-icon-button" md-menu-trigger>
-        <md-icon>more_vert</md-icon>
+    <md-card-content v-if="item.excerpt.protected">
+      This post is password protected
+    </md-card-content>
+    <md-card-content v-else v-html="item.excerpt.rendered"></md-card-content>
+
+    <md-card-actions>
+      <md-button class="md-icon-button">
+        <md-icon>favorite</md-icon>
       </md-button>
 
-      <md-menu-content>
-        <md-menu-item>
-          <span>Share</span>
-          <md-icon>share</md-icon>
-        </md-menu-item>
-      </md-menu-content>
-    </md-menu>
-  </md-card-header>
+      <md-button class="md-icon-button">
+        <md-icon>bookmark</md-icon>
+      </md-button>
 
-  <md-card-content v-if="item.excerpt.protected">
-    This post is password protected
-  </md-card-content>
-  <md-card-content v-else v-html="item.excerpt.rendered"></md-card-content>
+      <md-button class="md-icon-button">
+        <md-icon>share</md-icon>
+      </md-button>
+    </md-card-actions>
   </md-card>
   <infinite-loading :on-infinite="onInfinite" ref="infiniteLoading">
   <span slot="no-more">
@@ -76,10 +81,10 @@ export default {
       }
     },
     onInfinite() {
-      this.$http.get('posts', {
+      this.$http.get('posts?_embed', {
         params: {
           page: this.list.length / 10 + 1,
-          fields: 'id,title,excerpt,modified_gmt',
+          fields: 'id,title,excerpt,modified_gmt,_embedded',
           categories: this.$route.params.categoryId
         },
       }).then((posts) => {
