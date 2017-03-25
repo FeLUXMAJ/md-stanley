@@ -73,15 +73,13 @@ export default {
   },
   methods: {
     reload () {
-      this.$parent.title = this.$route.params.categoryName
-      if (this.$route.name == 'Home' || this.$route.params.categoryId != '') {
-        if (this.categoryId != this.$route.params.categoryId) {
-          this.list = []
-          this.$nextTick(() => {
-            this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
-          })
-        }
+      if(this.$route.name == 'Home') {
+        this.$parent.title = this.$parent.siteName
+      }else if (this.categoryId != this.$route.params.categoryId) {
+        this.$parent.title = this.$route.params.categoryName
       }
+      this.list = []
+      this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');
     },
     onInfinite() {
       this.$http.get('posts?_embed', {
