@@ -65,6 +65,10 @@ span {
 .md-input-container .md-icon::after{
   display: none;
 }
+
+#comment {
+  margin-bottom: 40px;
+}
 </style>
 
 <script>

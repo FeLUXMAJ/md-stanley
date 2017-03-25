@@ -4,7 +4,7 @@
     <md-card-media v-if="item._embedded['wp:featuredmedia']">
         <img v-bind:src="item._embedded['wp:featuredmedia'][0].source_url">
     </md-card-media>
-    
+
     <md-card-header>
       <md-card-header-text>
         <router-link :to="'/post/'+item.id" tag="div"><div class="md-title">{{item.title.rendered}}</div></router-link>
@@ -114,7 +114,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.img-null {
-  display: none;
+@media screen and (min-width: 768px) {
+  .home {
+    column-count: 2;
+    column-gap:10px;
+  }
+}
+
+.md-card {
+  margin: 5px;
 }
 </style>

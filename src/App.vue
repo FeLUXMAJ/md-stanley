@@ -121,12 +121,10 @@ export default {
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif, "Microsoft YaHei New", "Microsoft Yahei", "微软雅黑";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  display: flex;
   min-height: 100vh;
-  flex-direction: column;
   font-variant-ligatures: common-ligatures contextual;
 }
 
@@ -156,15 +154,13 @@ body, .cmtbottom{
   z-index: 300;
 }
 
+/*prevent z-index calculate error */
 .md-card {
-  background-color: transparent !important;
-  box-shadow: none;
   z-index: 100;
 }
 
 .main {
   padding-top: 64px !important;
-  flex: 1;
 }
 
 .md-avatar-list .md-list-item-container:hover{
