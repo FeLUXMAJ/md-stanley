@@ -1,21 +1,24 @@
 <template>
 <div class="home">
   <md-card v-for="item in list" md-with-hover>
+    <router-link :to="'/post/'+item.id" tag="div">
     <md-card-media v-if="item._embedded['wp:featuredmedia']">
         <img v-bind:src="item._embedded['wp:featuredmedia'][0].source_url">
     </md-card-media>
 
     <md-card-header>
       <md-card-header-text>
-        <router-link :to="'/post/'+item.id" tag="div"><div class="md-title">{{item.title.rendered}}</div></router-link>
+        <div class="md-title">{{item.title.rendered}}</div>
         <div class="md-subhead">{{ item.modified_gmt | locale }}</div>
       </md-card-header-text>
     </md-card-header>
 
-    <md-card-content v-if="item.excerpt.protected">
-      This post is password protected
+    <md-card-content v-if="item.excerpt.protected" class="password-protected">
+      <md-icon class="md-size-3x md-display-1">lock</md-icon>
+      <p>This post is password protected</p>
     </md-card-content>
     <md-card-content v-else v-html="item.excerpt.rendered"></md-card-content>
+    </router-link>
 
     <md-card-actions>
       <md-button class="md-icon-button">
@@ -31,7 +34,7 @@
       </md-button>
     </md-card-actions>
   </md-card>
-  <infinite-loading :on-infinite="onInfinite" ref="infiniteLoading">
+  <infinite-loading :on-infinite="onInfinite" ref="infiniteLoading" class="spinner">
   <span slot="no-more">
     Loading Complete :)
   </span>
@@ -117,8 +120,23 @@ export default {
 @media screen and (min-width: 768px) {
   .home {
     column-count: 2;
-    column-gap:10px;
+    column-gap:15px;
+    width: 90%;
+    margin: 0px auto;
   }
+
+  .md-card {
+    display: inline-block;
+    width: 100%
+  }
+
+  .spinner {
+    column-span: all
+  }
+}
+
+.password-protected {
+  text-align: center;
 }
 
 .md-card {
