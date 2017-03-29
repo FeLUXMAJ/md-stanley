@@ -1,35 +1,34 @@
 <template>
   <div class="post">
     <md-progress md-indeterminate v-if="this.loading" class="md-warn"></md-progress>
-    <div class="wrapper" v-else>
-      <div class="post-cover" v-once></div>
-      <div class="container" id="container">
-        <div v-if="post.content.rendered == ''">
-          <md-input-container md-has-password>
-            <md-icon>lock</md-icon>
-            <label>Password</label>
-            <md-input type="password" v-model="password"></md-input>
-          </md-input-container>
-          <md-button class="md-primary" v-on:click.native.once="getPost">Confirm</md-button>
-        </div>
-
-        <div class="post-content" v-else>
-          <md-button class="md-fab toc-toggle" v-on:click.native="$refs.rightSidenav.toggle()">
-            <md-icon>view_list</md-icon>
-          </md-button>
-
-          <md-sidenav class="md-right toc-container" ref="rightSidenav">
-            <md-list class="toc">
-              <a v-bind:href="'#'+title.id" v-for="title in toclist">
-                <md-list-item v-bind:class="'toc-'+title.name">{{title.text}}</md-list-item>
-              </a>
-            </md-list>
-          </md-sidenav>
-          <div ref="content" class="content" v-html="post.content.rendered"></div>
-        </div>
+    <div class="post-cover" v-once v-else></div>
+    <div class="container" id="container" v-if="this.loading == false">
+      <div v-if="post.content.rendered == ''">
+        <md-input-container md-has-password>
+          <md-icon>lock</md-icon>
+          <label>Password</label>
+          <md-input type="password" v-model="password"></md-input>
+        </md-input-container>
+        <md-button class="md-primary" v-on:click.native.once="getPost">Confirm</md-button>
       </div>
 
+      <div class="post-content" v-else>
+        <md-sidenav class="md-right" ref="rightSidenav">
+          <md-list>
+            <a v-bind:href="'#'+title.id" v-for="title in toclist" class="toca">
+              <md-list-item v-bind:class="'toc-'+title.name">{{title.text}}</md-list-item>
+            </a>
+          </md-list>
+        </md-sidenav>
+
+        <div ref="content" class="content" v-html="post.content.rendered"></div>
+
+        <md-button class="md-fab toc-toggle" v-on:click.native="$refs.rightSidenav.toggle()">
+          <md-icon>view_list</md-icon>
+        </md-button>
+      </div>
     </div>
+
     <md-snackbar md-position="bottom center" ref="snackbar" md-duration="4000">
       <span>Incorrect Password</span>
       <md-button class="md-warn" @click.native="$refs.snackbar.close()">Dismiss</md-button>
@@ -55,6 +54,11 @@ export default {
   name: 'post',
   components: {Comment},
   activated () {
+    window.onhashchange = function(){
+      if (window.location.hash == "" || window.location.hash == "#"){
+        return false
+      }
+    }
     this.$parent.transparent = true
     this.scrolled = 0
     this.postmain = 0
@@ -123,16 +127,16 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.toca:link,.toca:visited,.toca:hover,.toca:active{
+    color: #000 !important;
+}
+
 .post-cover {
   background-image: url('/static/background.jpg');
   background-size: cover;
   height: 200px;
   margin-top: -65px;
-}
-
-.md-display-1 {
-  padding-top: 25px;
 }
 
 .toc-H2 {
@@ -147,33 +151,30 @@ export default {
   padding-left: 20px;
 }
 
-.toc {
-  list-style: none;
-}
-
 .toc-toggle {
   position: fixed;
-  right: 40px;
-  bottom: 65px;
+  right: 16px;
+  bottom: 64px;
 }
 
 @media screen and (min-width: 960px) {
   .post-content {
     display: flex;
   }
+
   .content {
     flex: 1;
   }
+
   .toc-toggle {
     display: none;
   }
-  .toc-container {
-    position: static !important;
-    width: 233px !important;
-  }
-  .md-sidenav-content {
-    position: absolute;
+
+  .md-right .md-sidenav-content {
+    position: initial !important;
     left: 0px;
+    right: initial !important;
+    transform: none !important;
     width: 233px;
   }
 }

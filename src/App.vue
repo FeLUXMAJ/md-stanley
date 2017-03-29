@@ -3,8 +3,12 @@
     <title>{{title}}</title>
     <md-toolbar class="top" v-bind:class="{ 'md-toolbar-post': transparent}">
       <div class="md-toolbar-container">
-        <md-button class="md-icon-button" @click.native="toggleLeftSidenav">
+        <md-button class="md-icon-button" @click.native="toggleLeftSidenav" v-if="this.$route.name == 'Home' || this.$route.name == 'Category'">
           <md-icon>menu</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" @click.native="back" v-else>
+          <md-icon>arrow_back</md-icon>
         </md-button>
 
         <h2 class="md-title" style="flex: 1">{{title}}</h2>
@@ -96,12 +100,31 @@ export default {
   methods: {
     toggleLeftSidenav() {
       this.$refs.leftSidenav.toggle();
+    },
+    back() {
+      history.back(1)
     }
   }
 }
 </script>
 
 <style>
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    overflow-x: auto;
+		display: block;
+}
+
+td, th {
+    border-top: 1px solid #ccc;
+    padding: 4px 8px;
+}
+
+tbody tr:nth-child(even) td {
+    background-color: #eee;
+}
+
 .slide-fade-enter-active {
   transition: all .3s ease;
 }
@@ -118,30 +141,22 @@ export default {
   font-family: Roboto, Helvetica, Arial, sans-serif, "Microsoft YaHei New", "Microsoft Yahei", "微软雅黑";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
   font-variant-ligatures: common-ligatures contextual;
 }
 
-body, .cmtbottom{
+.cmtbottom{
   background-color: #fff !important;
-  color: #161823 !important;
 }
 
 .md-title {
   transition: all .4s cubic-bezier(.25,.8,.25,1);
 }
 
-.md-toolbar {
-  color: #fff !important;
-}
-
 .md-toolbar-post{
-  background-image: none;
   background: transparent !important;
-  color: #fff !important;
 }
 
-.md-sidenav .md-backdrop{
+.md-left .md-backdrop{
   position: fixed;
   height: 100%;
   width: 100%;
@@ -155,7 +170,7 @@ body, .cmtbottom{
 }
 
 body {
-  margin-top: 64px !important;
+  padding-top: 64px !important;
 }
 
 .md-avatar-list .md-list-item-container:hover{
@@ -164,7 +179,7 @@ body {
 
 .top {
   position: fixed;
-  top: 0;
+  top: 0px;
   width: 100%;
   z-index: 200 !important;
 }
