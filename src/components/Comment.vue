@@ -67,7 +67,7 @@ span {
 }
 
 #comment {
-  margin-bottom: 40px;
+  margin-bottom: 60px;
 }
 </style>
 

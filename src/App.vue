@@ -3,13 +3,10 @@
     <title>{{title}}</title>
     <md-toolbar class="top" v-bind:class="{ 'md-toolbar-post': transparent}">
       <div class="md-toolbar-container">
-        <md-button class="md-icon-button" @click.native="toggleLeftSidenav" v-if="this.$route.name == 'Category'||this.$route.name == 'Home'">
+        <md-button class="md-icon-button" @click.native="toggleLeftSidenav">
           <md-icon>menu</md-icon>
         </md-button>
 
-        <md-button class="md-icon-button hide" @click.native="back" v-else>
-          <md-icon>arrow_back</md-icon>
-        </md-button>
         <h2 class="md-title" style="flex: 1">{{title}}</h2>
         <md-button class="md-icon-button">
           <md-icon>search</md-icon>
@@ -17,7 +14,7 @@
       </div>
     </md-toolbar>
 
-    <md-sidenav class="md-left" ref="leftSidenav" @open="open('Left')" @close="close('Left')">
+    <md-sidenav class="md-left" ref="leftSidenav">
       <md-toolbar class="md-account-header">
         <md-list class="md-transparent">
           <md-list-item class="md-avatar-list">
@@ -99,9 +96,6 @@ export default {
   methods: {
     toggleLeftSidenav() {
       this.$refs.leftSidenav.toggle();
-    },
-    back () {
-      history.back(-1)
     }
   }
 }
@@ -152,6 +146,7 @@ body, .cmtbottom{
   height: 100%;
   width: 100%;
   z-index: 300;
+  top: 0px !important;
 }
 
 /*prevent z-index calculate error */
@@ -159,8 +154,8 @@ body, .cmtbottom{
   z-index: 100;
 }
 
-.main {
-  padding-top: 64px !important;
+body {
+  margin-top: 64px !important;
 }
 
 .md-avatar-list .md-list-item-container:hover{
@@ -176,6 +171,7 @@ body, .cmtbottom{
 
 .md-sidenav-content {
   z-index: 400 !important;
+  position: fixed !important;
 }
 
 .container {

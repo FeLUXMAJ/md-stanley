@@ -3,7 +3,7 @@
     <md-progress md-indeterminate v-if="this.loading" class="md-warn"></md-progress>
     <div class="wrapper" v-else>
       <div class="post-cover" v-once></div>
-      <div class="container" id="post">
+      <div class="container" id="container">
         <div v-if="post.content.rendered == ''">
           <md-input-container md-has-password>
             <md-icon>lock</md-icon>
@@ -14,14 +14,18 @@
         </div>
 
         <div class="post-content" v-else>
-          <div class="toc" v-bind:class="{'toc-top': tocScroll}">
-            <ul>
-              <li v-for="title in toclist" v-bind:class="'toc-'+title.name">
-                <a v-bind:href="'#'+title.id">{{title.text}}</a>
-              </li>
-            </ul>
-          </div>
-          <div ref="content" class="content" v-html="post.content.rendered" v-bind:class="{'content-toc-top': tocScroll}"></div>
+          <md-button class="md-fab toc-toggle" v-on:click.native="$refs.rightSidenav.toggle()">
+            <md-icon>view_list</md-icon>
+          </md-button>
+
+          <md-sidenav class="md-right toc-container" ref="rightSidenav">
+            <md-list class="toc">
+              <a v-bind:href="'#'+title.id" v-for="title in toclist">
+                <md-list-item v-bind:class="'toc-'+title.name">{{title.text}}</md-list-item>
+              </a>
+            </md-list>
+          </md-sidenav>
+          <div ref="content" class="content" v-html="post.content.rendered"></div>
         </div>
       </div>
 
@@ -46,50 +50,55 @@ export default {
       scrolled: 0,
       postmain: 0,
       toclist: [],
-      tocScroll: false
     }
   },
   name: 'post',
   components: {Comment},
   activated () {
-    window.addEventListener('scroll', this.handleScroll)
+    this.$parent.transparent = true
     this.scrolled = 0
     this.postmain = 0
 
-    if (this.post && this.post.id != this.$route.params.postId) {
-      this.password = null
-      this.getPost()
+    if (this.post) {
+      if (this.post.id != this.$route.params.postId) {
+        this.password = null
+        this.getPost()
+      }else {
+        this.$parent.title = this.post.title.rendered
+        this.$parent.transparent = true
+      }
     }else {
-      this.$parent.title = this.post.title.rendered
-      this.$parent.transparent = true
+      this.getPost()
     }
+
+    this.$nextTick(() => {
+      window.addEventListener('scroll', this.handleScroll)
+    })
   },
   deactivated () {
     window.removeEventListener('scroll', this.handleScroll)
     this.$parent.transparent = false
-    this.tocScroll = false
   },
   methods: {
+    handleScroll () {
+      this.$parent.transparent = false
+      this.scrolled = window.scrollY + window.innerHeight - 220
+      this.postmain = document.getElementById("container").clientHeight
+      if (window.scrollY <= 120) {
+        this.$parent.transparent = true
+      }
+    },
     toc () {
-      this.$nextTick((item) => {
+      this.$nextTick(() => {
           var toc = []
           var content = this.$refs.content
           var heading = [].slice.call(content.querySelectorAll("h1,h2,h3,h4"))
           heading.forEach((item) => {
-            toc = toc.concat([{name: item.nodeName,text: item.outerText}])
+            item.id = encodeURI(item.outerText)
+            toc = toc.concat([{name: item.nodeName,text: item.outerText,id:item.id}])
           })
           this.toclist = toc
       })
-    },
-    handleScroll () {
-      this.$parent.transparent = true
-      this.tocScroll = false
-      this.scrolled = window.scrollY + window.innerHeight - 220
-      this.postmain = document.getElementById('post').clientHeight
-      if (window.scrollY >= 120) {
-        this.$parent.transparent = false
-        this.tocScroll = true
-      }
     },
     getPost () {
       this.$parent.transparent = false
@@ -126,36 +135,6 @@ export default {
   padding-top: 25px;
 }
 
-.md-speed-dial {
-  z-index: 9999;
-  position: fixed !important;
-}
-
-.post-content {
-  display: flex;
-}
-
-@media screen and (min-width: 960px) {
-  .toc {
-    width: 233px;
-    left: 0px;
-    top: 65px;
-  }
-
-  .toc-top {
-    position: fixed;
-    height: 100%;
-  }
-
-  .content {
-    flex: 1;
-  }
-
-  .content-toc-top {
-    padding-left: 233px;
-  }
-}
-
 .toc-H2 {
   padding-left: 10px;
 }
@@ -168,7 +147,34 @@ export default {
   padding-left: 20px;
 }
 
-.toc ul {
+.toc {
   list-style: none;
+}
+
+.toc-toggle {
+  position: fixed;
+  right: 40px;
+  bottom: 65px;
+}
+
+@media screen and (min-width: 960px) {
+  .post-content {
+    display: flex;
+  }
+  .content {
+    flex: 1;
+  }
+  .toc-toggle {
+    display: none;
+  }
+  .toc-container {
+    position: static !important;
+    width: 233px !important;
+  }
+  .md-sidenav-content {
+    position: absolute;
+    left: 0px;
+    width: 233px;
+  }
 }
 </style>
