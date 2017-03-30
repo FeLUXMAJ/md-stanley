@@ -27,7 +27,7 @@
         </md-sidenav>
 
         <div ref="content" class="content" v-html="post.content.rendered"></div>
-        <md-button class="md-fab toc-toggle" v-on:click.native="$refs.rightSidenav.toggle()">
+        <md-button class="md-fab toc-toggle" v-on:click.native="toggleToc()">
           <md-icon>view_list</md-icon>
         </md-button>
       </div>
@@ -86,6 +86,11 @@ export default {
     this.$parent.transparent = false
   },
   methods: {
+    toggleToc () {
+      var windowPos = window.scrollY
+      this.$refs.rightSidenav.toggle()
+      window.scroll(0, windowPos)
+    },
     handleScroll () {
       this.$parent.transparent = false
       this.scrolled = window.scrollY + window.innerHeight - 220

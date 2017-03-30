@@ -99,7 +99,9 @@ export default {
   },
   methods: {
     toggleLeftSidenav() {
+      var windowPos = window.scrollY
       this.$refs.leftSidenav.toggle();
+      window.scroll(0, windowPos)
     },
     back() {
       history.back(1)
