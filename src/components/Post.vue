@@ -14,15 +14,17 @@
 
       <div class="post-content" v-else>
         <md-sidenav class="md-right" ref="rightSidenav">
-          <md-list>
-            <a v-bind:href="'#'+title.id" v-for="title in toclist" class="toca">
-              <md-list-item v-bind:class="'toc-'+title.name">{{title.text}}</md-list-item>
-            </a>
-          </md-list>
+          <div class="md-toolbar-container">
+            <h3 class="md-title toc-title" v-text="this.post.title.rendered" align="center"></h3>
+            <md-list class="toc-list">
+              <a v-bind:href="'#'+title.id" v-for="title in toclist" class="toca">
+                <md-list-item v-bind:class="'toc-'+title.name">{{title.text}}</md-list-item>
+              </a>
+            </md-list>
+          </div>
         </md-sidenav>
 
         <div ref="content" class="content" v-html="post.content.rendered"></div>
-
         <md-button class="md-fab toc-toggle" v-on:click.native="$refs.rightSidenav.toggle()">
           <md-icon>view_list</md-icon>
         </md-button>
@@ -54,11 +56,6 @@ export default {
   name: 'post',
   components: {Comment},
   activated () {
-    window.onhashchange = function(){
-      if (window.location.hash == "" || window.location.hash == "#"){
-        return false
-      }
-    }
     this.$parent.transparent = true
     this.scrolled = 0
     this.postmain = 0
@@ -77,6 +74,9 @@ export default {
 
     this.$nextTick(() => {
       window.addEventListener('scroll', this.handleScroll)
+      if (window.innerWidth >= 960) {
+        $refs.rightSidenav.mdVisible = true
+      }
     })
   },
   deactivated () {
@@ -166,7 +166,7 @@ export default {
     flex: 1;
   }
 
-  .toc-toggle {
+  .toc-toggle, .toc-title {
     display: none;
   }
 
@@ -176,6 +176,12 @@ export default {
     right: initial !important;
     transform: none !important;
     width: 233px;
+    box-shadow: none !important;
+    pointer-events: all;
+  }
+  
+  .md-right .md-sidenav-backdrop {
+    display: none;
   }
 }
 </style>

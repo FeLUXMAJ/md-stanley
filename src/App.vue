@@ -109,6 +109,13 @@ export default {
 </script>
 
 <style>
+:target::before {
+  content: '';
+  height: 70px;
+  margin-top: -70px;
+  display: block;
+}
+
 table {
     border-collapse: collapse;
     border-spacing: 0;

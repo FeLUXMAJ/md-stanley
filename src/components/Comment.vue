@@ -69,6 +69,20 @@ span {
 #comment {
   margin-bottom: 60px;
 }
+
+@media screen and (min-width: 960px){
+  #comment {
+    padding-left: 233px;
+  }
+
+  .cmtbottom {
+    position: unset;
+  }
+
+  .md-subheading {
+    padding-left: 16px;
+  }
+}
 </style>
 
 <script>
