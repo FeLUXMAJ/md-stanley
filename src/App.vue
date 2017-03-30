@@ -156,17 +156,17 @@ tbody tr:nth-child(even) td {
   background: transparent !important;
 }
 
-.md-left .md-backdrop{
+.md-left .md-backdrop, .md-right .md-backdrop{
   position: fixed;
   height: 100%;
   width: 100%;
-  z-index: 300;
+  z-index: 3;
   top: 0px !important;
 }
 
 /*prevent z-index calculate error */
 .md-card {
-  z-index: 100;
+  z-index: 1;
 }
 
 body {
@@ -181,11 +181,11 @@ body {
   position: fixed;
   top: 0px;
   width: 100%;
-  z-index: 200 !important;
+  z-index: 2 !important;
 }
 
-.md-sidenav-content {
-  z-index: 400 !important;
+.md-left .md-sidenav-content, .md-right .md-sidenav-content{
+  z-index: 4 !important;
   position: fixed !important;
 }
 
