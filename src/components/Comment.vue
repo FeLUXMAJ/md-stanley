@@ -72,7 +72,7 @@ span {
 
 @media screen and (min-width: 960px){
   #comment {
-    padding-left: 233px;
+    padding-left: 276px;
   }
 
   .cmtbottom {

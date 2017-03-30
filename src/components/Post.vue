@@ -17,9 +17,11 @@
           <div class="md-toolbar-container">
             <h3 class="md-title toc-title" v-text="this.post.title.rendered" align="center"></h3>
             <md-list class="toc-list">
-              <a v-bind:href="'#'+title.id" v-for="title in toclist" class="toca">
-                <md-list-item v-bind:class="'toc-'+title.name">{{title.text}}</md-list-item>
-              </a>
+              <md-list-item
+                v-for="title in toclist"
+                v-bind:class="'toc-'+title.name"
+                v-on:click.native="goAnchor(title.id)"
+                >{{title.text}}</md-list-item>
             </md-list>
           </div>
         </md-sidenav>
@@ -104,6 +106,10 @@ export default {
           this.toclist = toc
       })
     },
+    goAnchor (hash) {
+      var elem = document.getElementById(hash)
+      window.scrollTo(0, elem.offsetTop - 80)
+    },
     getPost () {
       this.$parent.transparent = false
       this.loading = true
@@ -164,6 +170,7 @@ export default {
 
   .content {
     flex: 1;
+    padding-left: 16px;
   }
 
   .toc-toggle, .toc-title {
@@ -175,11 +182,11 @@ export default {
     left: 0px;
     right: initial !important;
     transform: none !important;
-    width: 233px;
+    width: 260px;
     box-shadow: none !important;
     pointer-events: all;
   }
-  
+
   .md-right .md-sidenav-backdrop {
     display: none;
   }

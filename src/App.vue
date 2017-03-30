@@ -124,12 +124,12 @@ table {
 }
 
 td, th {
-    border-top: 1px solid #ccc;
+    border: 1px solid #B2DFDB;
     padding: 4px 8px;
 }
 
 tbody tr:nth-child(even) td {
-    background-color: #eee;
+    background-color: #E0F2F1;
 }
 
 .slide-fade-enter-active {
