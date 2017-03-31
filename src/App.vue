@@ -123,22 +123,6 @@ export default {
   display: block;
 }
 
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    overflow-x: auto;
-		display: block;
-}
-
-td, th {
-    border: 1px solid #B2DFDB;
-    padding: 4px 8px;
-}
-
-tbody tr:nth-child(even) td {
-    background-color: #E0F2F1;
-}
-
 .slide-fade-enter-active {
   transition: all .3s ease;
 }

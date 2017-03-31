@@ -2,7 +2,7 @@
 <div class="home">
   <md-card v-for="item in list">
     <router-link :to="'/post/'+item.id" tag="div">
-    <md-card-media v-if="item._embedded['wp:featuredmedia']">
+    <md-card-media v-if="item._embedded['wp:featuredmedia']" md-ratio="16:9">
         <img v-bind:src="item._embedded['wp:featuredmedia'][0].source_url">
     </md-card-media>
 

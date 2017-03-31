@@ -139,6 +139,41 @@ export default {
 </script>
 
 <style>
+table {
+  color: #333;
+  border-collapse:collapse;
+  border-spacing: 0;
+  min-width: 640px;
+  overflow-x: auto;
+}
+
+@media screen and (max-width: 720px) {
+  table {
+    width: 100%;
+    min-width: 0px;
+  }
+}
+
+td, th {
+  border: 1px solid transparent;
+  height: 30px;
+  transition: all 0.3s;
+}
+
+th {
+  background: #DFDFDF;
+  font-weight: bold;
+}
+
+td {
+  background: #FAFAFA;
+  text-align: center;
+}
+
+tr:nth-child(even) td { background: #F1F1F1; }
+
+tr:nth-child(odd) td { background: #FEFEFE; }
+
 .post-cover {
   background-image: url('/static/background.jpg');
   background-size: cover;
