@@ -139,10 +139,6 @@ export default {
 </script>
 
 <style>
-.toca:link,.toca:visited,.toca:hover,.toca:active{
-    color: #000 !important;
-}
-
 .post-cover {
   background-image: url('/static/background.jpg');
   background-size: cover;
@@ -166,6 +162,12 @@ export default {
   position: fixed;
   right: 16px;
   bottom: 64px;
+}
+
+blockquote {
+  margin: 20px 0;
+  padding-left: 1rem;
+  border-left: 5px solid #B2DFDB;
 }
 
 @media screen and (min-width: 960px) {

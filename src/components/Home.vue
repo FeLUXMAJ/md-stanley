@@ -1,6 +1,6 @@
 <template>
 <div class="home">
-  <md-card v-for="item in list" md-with-hover>
+  <md-card v-for="item in list">
     <router-link :to="'/post/'+item.id" tag="div">
     <md-card-media v-if="item._embedded['wp:featuredmedia']">
         <img v-bind:src="item._embedded['wp:featuredmedia'][0].source_url">

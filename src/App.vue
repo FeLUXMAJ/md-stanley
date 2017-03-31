@@ -111,6 +111,11 @@ export default {
 </script>
 
 <style>
+.noscroll{
+    position:fixed;
+    overflow:hidden;
+}
+
 :target::before {
   content: '';
   height: 70px;
