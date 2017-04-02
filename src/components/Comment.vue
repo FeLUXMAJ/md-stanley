@@ -1,5 +1,5 @@
 <template>
-  <div class="container" id="comment">
+  <div id="comment">
     <div class="header" style="display: flex">
       <span class="md-subheading" style="flex:1">Comments</span>
       <router-link to="/settings">Settings</router-link>
@@ -70,17 +70,9 @@ span {
   margin-bottom: 60px;
 }
 
-@media screen and (min-width: 960px){
-  #comment {
-    padding-left: 276px;
-  }
-
+@media screen and (min-width: 720px){
   .cmtbottom {
     position: unset;
-  }
-
-  .md-subheading {
-    padding-left: 16px;
   }
 }
 </style>

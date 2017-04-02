@@ -2,7 +2,7 @@
   <div class="post">
     <md-progress md-indeterminate v-if="this.loading" class="md-warn"></md-progress>
     <div class="post-cover" v-once v-else></div>
-    <div class="container" id="container" v-if="this.loading == false">
+    <div class="container" v-if="this.loading == false">
       <div v-if="post.content.rendered == ''">
         <md-input-container md-has-password>
           <md-icon>lock</md-icon>
@@ -26,10 +26,13 @@
           </div>
         </md-sidenav>
 
-        <div ref="content" class="content" v-html="post.content.rendered"></div>
-        <md-button class="md-fab toc-toggle" v-on:click.native="toggleToc()">
-          <md-icon>view_list</md-icon>
-        </md-button>
+        <main>
+          <article ref="content" class="content" v-html="post.content.rendered" id="article-main"></article>
+          <comment v-bind:postId="post.id" v-if="post.content.rendered && loading != true"></comment>
+          <md-button class="md-fab toc-toggle" v-on:click.native="toggleToc()">
+            <md-icon>view_list</md-icon>
+          </md-button>
+        </main>
       </div>
     </div>
 
@@ -37,7 +40,6 @@
       <span>Incorrect Password</span>
       <md-button class="md-warn" @click.native="$refs.snackbar.close()">Dismiss</md-button>
     </md-snackbar>
-    <comment v-bind:postId="post.id" v-if="post.content.rendered && loading != true"></comment>
   </div>
 </template>
 
@@ -93,8 +95,8 @@ export default {
     },
     handleScroll () {
       this.$parent.transparent = false
-      this.scrolled = window.scrollY + window.innerHeight - 220
-      this.postmain = document.getElementById("container").clientHeight
+      this.scrolled = window.scrollY + window.innerHeight - 300
+      this.postmain = document.getElementById("article-main").clientHeight
       if (window.scrollY <= 120) {
         this.$parent.transparent = true
       }
@@ -143,15 +145,8 @@ table {
   color: #333;
   border-collapse:collapse;
   border-spacing: 0;
-  min-width: 640px;
+  width: 100%;
   overflow-x: auto;
-}
-
-@media screen and (max-width: 720px) {
-  table {
-    width: 100%;
-    min-width: 0px;
-  }
 }
 
 td, th {
@@ -205,13 +200,16 @@ blockquote {
   border-left: 5px solid #B2DFDB;
 }
 
-@media screen and (min-width: 960px) {
+@media screen and (min-width: 720px) {
   .post-content {
     display: flex;
   }
 
   .content {
     flex: 1;
+  }
+
+  #main {
     padding-left: 16px;
   }
 
@@ -233,4 +231,5 @@ blockquote {
     display: none;
   }
 }
+
 </style>
