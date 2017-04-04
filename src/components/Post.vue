@@ -200,6 +200,10 @@ blockquote {
   border-left: 5px solid #B2DFDB;
 }
 
+.content {
+  word-wrap: break-word;
+}
+
 @media screen and (min-width: 720px) {
   .post-content {
     display: flex;
