@@ -81,6 +81,9 @@ export default {
       if (window.innerWidth >= 960) {
         $refs.rightSidenav.mdVisible = true
       }
+
+      var math = document.getElementById("article-main");
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, math]);
     })
   },
   deactivated () {
