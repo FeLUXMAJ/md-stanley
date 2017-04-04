@@ -12,8 +12,13 @@ Vue.config.productionTip = false
 Vue.http.options.root = 'https://stanley.elfstack.com/wp-json/wp/v2'
 
 Vue.material.registerTheme('default', {
-  primary: 'teal',
-  warn: 'teal'
+  primary: 'white',
+  warn: 'black'
+})
+
+Vue.material.registerTheme('green', {
+  primary: 'green',
+  warn: 'pink'
 })
 /* eslint-disable no-new */
 new Vue({

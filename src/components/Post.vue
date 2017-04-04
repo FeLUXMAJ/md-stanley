@@ -1,45 +1,48 @@
 <template>
   <div class="post">
-    <md-progress md-indeterminate v-if="this.loading" class="md-warn"></md-progress>
-    <div class="post-cover" v-once v-else></div>
-    <div class="container" v-if="this.loading == false">
-      <div v-if="post.content.rendered == ''">
-        <md-input-container md-has-password>
-          <md-icon>lock</md-icon>
-          <label>Password</label>
-          <md-input type="password" v-model="password"></md-input>
-        </md-input-container>
-        <md-button class="md-primary" v-on:click.native.once="getPost">Confirm</md-button>
-      </div>
+    <md-progress md-indeterminate v-if="this.loading" class="loading"></md-progress>
+    <main class="post-content" v-else>
+      <md-sidenav class="md-right" ref="rightSidenav" v-show="this.tocDisplay">
+        <div class="md-toolbar-container">
+          <h3 class="md-title toc-title" v-text="this.post.title.rendered" align="center"></h3>
+          <md-list class="toc-list">
+            <md-list-item v-for="title in toclist" v-bind:class="'toc-'+title.name" v-on:click.native="goAnchor(title.id)">{{title.text}}</md-list-item>
+          </md-list>
+        </div>
+      </md-sidenav>
 
-      <div class="post-content" v-else>
-        <md-sidenav class="md-right" ref="rightSidenav">
-          <div class="md-toolbar-container">
-            <h3 class="md-title toc-title" v-text="this.post.title.rendered" align="center"></h3>
-            <md-list class="toc-list">
-              <md-list-item
-                v-for="title in toclist"
-                v-bind:class="'toc-'+title.name"
-                v-on:click.native="goAnchor(title.id)"
-                >{{title.text}}</md-list-item>
-            </md-list>
-          </div>
-        </md-sidenav>
-
-        <main>
+      <div class="main" v-bind:class="[tocDisplay ? 'main-with-toc' : 'main-without-toc']">
+        <div class="post-cover" v-bind:style="{backgroundImage: coverImg}"></div>
+        <div class="container">
           <article ref="content" class="content" v-html="post.content.rendered" id="article-main"></article>
           <comment v-bind:postId="post.id" v-if="post.content.rendered && loading != true"></comment>
           <md-button class="md-fab toc-toggle" v-on:click.native="toggleToc()">
             <md-icon>view_list</md-icon>
           </md-button>
-        </main>
+        </div>
       </div>
-    </div>
+    </main>
+
+    <md-dialog ref="password">
+        <md-dialog-title>Password is required for this post</md-dialog-title>
+        <md-dialog-content>
+          <md-input-container md-has-password md-theme="blue">
+            <md-icon>lock</md-icon>
+            <label>Password</label>
+            <md-input type="password" v-model="password"></md-input>
+          </md-input-container>
+        </md-dialog-content>
+        <md-dialog-actions>
+          <md-button v-on:click.native="back()">Cancel</md-button>
+          <md-button v-on:click.native.once="confirmPass()">Confirm</md-button>
+        </md-dialog-actions>
+    </md-dialog>
 
     <md-snackbar md-position="bottom center" ref="snackbar" md-duration="4000">
       <span>Incorrect Password</span>
       <md-button class="md-warn" @click.native="$refs.snackbar.close()">Dismiss</md-button>
     </md-snackbar>
+
   </div>
 </template>
 
@@ -52,13 +55,25 @@ export default {
       tags: [],
       password: '',
       loading: true,
+      tocDisplay: true,
       scrolled: 0,
       postmain: 0,
-      toclist: [],
+      toclist: []
     }
   },
   name: 'post',
   components: {Comment},
+  computed: {
+    coverImg () {
+      if (this.post.featured_media == 0) {
+        return 'url(/static/background.jpg)'
+      } else {
+        var url = this.post._embedded['wp:featuredmedia'][0].source_url
+        return 'url(' + url + ')'
+      }
+
+    }
+  },
   activated () {
     this.$parent.transparent = true
     this.scrolled = 0
@@ -70,20 +85,15 @@ export default {
         this.getPost()
       }else {
         this.$parent.title = this.post.title.rendered
-        this.$parent.transparent = true
       }
     }else {
       this.getPost()
     }
 
     this.$nextTick(() => {
-      window.addEventListener('scroll', this.handleScroll)
-      if (window.innerWidth >= 960) {
-        $refs.rightSidenav.mdVisible = true
+      if (window.innerWidth <= 720) {
+        window.addEventListener('scroll', this.handleScroll)
       }
-
-      var math = document.getElementById("article-main");
-      MathJax.Hub.Queue(["Typeset", MathJax.Hub, math]);
     })
   },
   deactivated () {
@@ -91,10 +101,25 @@ export default {
     this.$parent.transparent = false
   },
   methods: {
+    back () {
+      this.post = []
+      this.$refs.password.close()
+      history.back(1)
+    },
     toggleToc () {
-      var windowPos = window.scrollY
-      this.$refs.rightSidenav.toggle()
-      window.scroll(0, windowPos)
+      if (window.innerWidth <= 720) {
+        var windowPos = window.scrollY
+        this.$refs.rightSidenav.toggle()
+        window.scroll(0, windowPos)
+      } else {
+        if (this.tocDisplay == true) {
+          this.tocDisplay = false
+          this.$parent.navEnabled = false
+        }else {
+          this.tocDisplay = true
+          this.$parent.navEnabled = true
+        }
+      }
     },
     handleScroll () {
       this.$parent.transparent = false
@@ -104,7 +129,7 @@ export default {
         this.$parent.transparent = true
       }
     },
-    toc () {
+    toc () {  //Render toc and mathjax
       this.$nextTick(() => {
           var toc = []
           var content = this.$refs.content
@@ -114,29 +139,42 @@ export default {
             toc = toc.concat([{name: item.nodeName,text: item.outerText,id:item.id}])
           })
           this.toclist = toc
+
+          var math = document.getElementById("article-main");
+          MathJax.Hub.Queue(["Typeset", MathJax.Hub, math]);
       })
     },
     goAnchor (hash) {
       var elem = document.getElementById(hash)
       window.scrollTo(0, elem.offsetTop - 80)
     },
+    confirmPass () {
+      this.$refs.password.close()
+      this.getPost()
+    },
     getPost () {
       this.$parent.transparent = false
       this.loading = true
       this.$parent.title = 'Loading...'
-      this.$http.get('posts/' + this.$route.params.postId,{
+      this.$http.get('posts/' + this.$route.params.postId + '?_embed',{
         params: {
           password: this.password
         }
       }).then((res) => {
         this.post = res.data
         this.$parent.title = this.post.title.rendered
-        this.loading = false
-        this.$parent.transparent = true
-        this.toc()
+        if (res.data.content.rendered == "") {
+          this.$refs.password.open()
+        } else {
+          this.loading = false
+          this.$parent.transparent = true
+          this.toc()
+          this.password = null
+        }
       }, (res) => {
         this.loading = false
         this.$refs.snackbar.open()
+        this.$refs.password.open()
       })
     }
   }
@@ -172,8 +210,13 @@ tr:nth-child(even) td { background: #F1F1F1; }
 
 tr:nth-child(odd) td { background: #FEFEFE; }
 
+.md-toolbar-post{
+  background: transparent !important;
+  box-shadow: unset;
+  color: #fff !important;
+}
+
 .post-cover {
-  background-image: url('/static/background.jpg');
   background-size: cover;
   height: 200px;
   margin-top: -65px;
@@ -200,36 +243,48 @@ tr:nth-child(odd) td { background: #FEFEFE; }
 blockquote {
   margin: 20px 0;
   padding-left: 1rem;
-  border-left: 5px solid #B2DFDB;
+  border-left: 5px solid #ccc;
 }
 
 .content {
   word-wrap: break-word;
 }
 
-@media screen and (min-width: 720px) {
-  .post-content {
-    display: flex;
+.loading {
+  z-index: 3;
+}
+
+@media screen and (min-width: 768px) {
+  .md-toolbar-post {
+    color: #000 !important;
+    width: 300px;
   }
 
-  .content {
-    flex: 1;
+  .main-without-toc {
+    max-width: 960px;
+    min-width: 768px;
+    margin: auto;
   }
 
-  #main {
-    padding-left: 16px;
+  .main-with-toc {
+    margin-left: 300px;
   }
 
-  .toc-toggle, .toc-title {
+  .toc-title {
+    display: none;
+  }
+
+  .toc-lg {
     display: none;
   }
 
   .md-right .md-sidenav-content {
-    position: initial !important;
+    position: fixed !important;
     left: 0px;
+    top: 65px;
     right: initial !important;
     transform: none !important;
-    width: 260px;
+    width: 300px;
     box-shadow: none !important;
     pointer-events: all;
   }

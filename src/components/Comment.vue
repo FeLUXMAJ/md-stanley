@@ -6,7 +6,7 @@
     </div>
 
     <div class="comment-input" v-bind:class="{ cmtbottom: isCmt }">
-      <md-input-container md-inline>
+      <md-input-container md-theme="blue" md-inline>
         <label>{{placeholder}}</label>
         <md-textarea v-model="comment"></md-textarea>
         <md-icon v-on:click.native.stop="submit">send</md-icon>

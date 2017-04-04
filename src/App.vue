@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <title>{{title}}</title>
-    <md-toolbar class="top" v-bind:class="{ 'md-toolbar-post': transparent}">
+    <md-toolbar class="top" v-bind:class="{ 'md-toolbar-post': transparent}" v-show="navEnabled">
       <div class="md-toolbar-container">
         <md-button class="md-icon-button" @click.native="toggleLeftSidenav" v-if="this.$route.name == 'Home' || this.$route.name == 'Category'">
           <md-icon>menu</md-icon>
@@ -91,7 +91,8 @@ export default {
       siteName: 'Stanley\'s blog',
       siteDescription: 'Where fragments of time goes',
       title: null,
-      transparent: false
+      transparent: false,
+      navEnabled: true
     }
   },
   created: function () {
@@ -111,13 +112,6 @@ export default {
 </script>
 
 <style>
-:target::before {
-  content: '';
-  height: 70px;
-  margin-top: -70px;
-  display: block;
-}
-
 .slide-fade-enter-active {
   transition: all .3s ease;
 }
@@ -172,11 +166,6 @@ body {
   width: 100%;
   z-index: 2 !important;
   box-shadow: 0 1px 3px rgba(0,0,0,.2), 0 1px 1px rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
-}
-
-.md-toolbar-post{
-  background: transparent !important;
-  box-shadow: unset;
 }
 
 .md-left .md-sidenav-content, .md-right .md-sidenav-content{

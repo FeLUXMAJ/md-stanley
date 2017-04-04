@@ -2,12 +2,12 @@
   <div class="container">
     <form novalidate @submit.stop.prevent="submit">
       <span class="md-title">Comments</span>
-      <md-input-container>
+      <md-input-container md-theme="blue">
         <label>Name</label>
         <md-input v-model="name"></md-input>
       </md-input-container>
 
-      <md-input-container>
+      <md-input-container md-theme="blue">
         <label>Email</label>
         <md-input v-model="email"></md-input>
       </md-input-container>
