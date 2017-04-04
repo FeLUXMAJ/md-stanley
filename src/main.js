@@ -10,18 +10,10 @@ Vue.use(VueMaterial)
 Vue.use(VueResource)
 Vue.config.productionTip = false
 Vue.http.options.root = 'https://stanley.elfstack.com/wp-json/wp/v2'
-/*
-stl:{50:"#e7dcce",100:"#b98477",200:"#cb4042",300:"#e7dcce",400:"#f1ebe3",500:"#994639",600:"#c7802d",
-*/
+
 Vue.material.registerTheme('default', {
-  primary: {
-    color: 'teal',
-    hue: 500
-  },
-  warn: {
-    color: 'teal',
-    hue: 400
-  }
+  primary: 'teal',
+  warn: 'teal'
 })
 /* eslint-disable no-new */
 new Vue({

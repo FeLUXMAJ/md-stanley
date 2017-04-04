@@ -111,11 +111,6 @@ export default {
 </script>
 
 <style>
-.noscroll{
-    position:fixed;
-    overflow:hidden;
-}
-
 :target::before {
   content: '';
   height: 70px;
@@ -150,10 +145,6 @@ export default {
   transition: all .4s cubic-bezier(.25,.8,.25,1);
 }
 
-.md-toolbar-post{
-  background: transparent !important;
-}
-
 .md-left .md-backdrop, .md-right .md-backdrop{
   position: fixed;
   height: 100%;
@@ -180,6 +171,12 @@ body {
   top: 0px;
   width: 100%;
   z-index: 2 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2), 0 1px 1px rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+}
+
+.md-toolbar-post{
+  background: transparent !important;
+  box-shadow: unset;
 }
 
 .md-left .md-sidenav-content, .md-right .md-sidenav-content{

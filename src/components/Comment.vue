@@ -62,10 +62,6 @@ span {
   margin: -10px 0 -10px 0;
 }
 
-.md-input-container .md-icon::after{
-  display: none;
-}
-
 #comment {
   margin-bottom: 60px;
 }
